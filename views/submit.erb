@@ -1,0 +1,6 @@
+<h2>Your will sumbit the answer of question <%= session[:page] %>: </h2>
+
+<form id=srcform action="<%= session[:page] %>/result" method="post">
+  <textarea name="source" cols=100 rows=20 form="srcform"></textarea><br>
+  <input type="submit" value="Submit">
+</form>

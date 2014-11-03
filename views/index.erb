@@ -1,0 +1,5 @@
+<h2>Welcome to BoroBoroOJ</h2>
+
+<% settings.questions.each do |q| %>
+  <a href='<%= "/#{q[0]}" %>'><%= "#{q[0]}. #{q[1]}" %></a><br>
+<% end %>
