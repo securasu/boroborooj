@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require 'sinatra/base'
 require 'rdiscount'
 
@@ -30,11 +29,16 @@ class BoroBoroOJ < Sinatra::Base
 
         post "/#{f}/result" do
           redirect '/' unless session[:page]
-          File.open "#{settings.root}/tmp/tmp.c", "w" do |f|
+          user = request.ip
+          begin
+            Dir.mkdir "#{settings.root}/tmp/#{user}"
+          rescue
+          end
+          File.open "#{settings.root}/tmp/#{user}/tmp.c", "w" do |f|
             f.write params[:source]
           end
           rs = ''
-          IO.popen "sh #{settings.root}/bin/prochecker.sh #{session[:page]} 1" do |pp|
+          IO.popen "sh #{settings.root}/bin/prochecker.sh #{user} #{session[:page]} 1" do |pp|
             rs << pp.read
           end
           erb :result, :locals => {:rs => rs}

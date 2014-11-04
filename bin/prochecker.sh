@@ -11,13 +11,20 @@ if [ "$?" -eq "0" ]
   echo "Bad Usage"
   exit -1
 fi
+test -z $3
+if [ "$?" -eq "0" ]
+  then
+  echo "Bad Usage"
+  exit -1
+fi
 
-QUES_DIR=`pwd`/question/$1
-REQ_TIME=$2
+USER=$1
+QUES_DIR=`pwd`/question/$2
+REQ_TIME=$3
 ZERO=0
 
 compile() {
-  gcc -O2 -DNDEBUG tmp/tmp.c -o tmp/a.out > /dev/null 2> /dev/null
+  gcc -O2 -DNDEBUG tmp/$USER/tmp.c -o tmp/$USER/a.out > /dev/null 2> /dev/null
   if [ "$?" -ne "0" ]
     then
     echo "Compile Error"
@@ -26,7 +33,7 @@ compile() {
 }
 
 run() {
-  (time tmp/a.out < $CASE/input_sample) > tmp/output 2> tmp/err
+  (time tmp/$USER/a.out < $CASE/input_sample) > tmp/$USER/output 2> tmp/$USER/err
   if [ "$?" -ne "0" ]
     then
     echo "Rumtime Error"
@@ -35,14 +42,14 @@ run() {
 }
 
 check() {
-  TIME=`awk '{if($1 ~ /user/) print substr($2, 1, 1)}' tmp/err`
+  TIME=`awk '{if($1 ~ /user/) print substr($2, 1, 1)}' tmp/$USER/err`
   if [ "$TIME" -gt "$REQ_TIME" ]
     then
     echo "Time Expired"
     exit -1
   fi
-  diff tmp/output $CASE/output_sample > tmp/rs
-  test -s tmp/rs
+  diff tmp/$USER/output $CASE/output_sample > tmp/$USER/rs
+  test -s tmp/$USER/rs
   if [ "$?" -ne "1" ]
     then
     echo "Wrong Answer"
